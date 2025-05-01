@@ -9,6 +9,7 @@ const app = express();
 const cookieParser = require('cookie-parser');
 
 /*
+//v1
 const cors = require('cors');
 const corsOptions = {
     optionsSuccessStatus: 200, // For legacy browser support
@@ -19,10 +20,11 @@ const corsOptions = {
 app.use(cors(corsOptions));
 */
 
-const corsMiddleware = require('./middleware/cors');
-app.use(corsMiddleware);
+//v2
+//const corsMiddleware = require('./middleware/cors');
+//app.use(corsMiddleware);
 
-/*
+//v3
 app.use(function(req, res, next) {
     const allowedOrigins = ['http://localhost:3000', 'https://localhost:3000'];
     const origin = req.headers.origin;
@@ -34,7 +36,7 @@ app.use(function(req, res, next) {
     res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, UPDATE");
     next();
 });
-*/
+
 
 
 

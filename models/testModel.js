@@ -37,7 +37,7 @@ class Test{
         //console.log(sql);
         return await db.execute(sql);
     }
-    async create(idUser,u_cr,name){
+    async create(idUser,u_cr,name,uuid){ 
         let sql = `INSERT INTO ttest(u_cr,d_cr,idUser,name,uuid) VALUES (
         '${u_cr}',
         '${this.currentData}',
