@@ -3,19 +3,12 @@ npm init
 npm i dotenv
 npm i express
 npm i express-validator
-npm i nodemon --save-dev  //chtob server perezapyskalsa pri lybih izmeneniyah
+npm i nodemon --save-dev 
 npm i cors
 npm i cookie-parser
 npm install --save mysql2
 npm i jsonwebtoken bcrypt
-
-
-
-
-
-
-
-//npm i uuid
+npm i uuid
 
 
 
