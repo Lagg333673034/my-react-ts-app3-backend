@@ -8,20 +8,20 @@ const SERVER_PORT = process.env.SERVER_PORT;
 const app = express();
 const cookieParser = require('cookie-parser');
 
-/*
+
 //v1
 const cors = require('cors');
 const corsOptions = {
     optionsSuccessStatus: 200, // For legacy browser support
     credentials: true, // This is important.
-    //origin: "https://silver-cucurucho-d41282.netlify.app",
-    origin: "http://localhost:3000",
+    origin: "http://lagg333673034-my-test-app.netlify.app",
+    //origin: "http://localhost:3000",
 };
 app.use(cors(corsOptions));
-*/
+
 
 //v2
-app.use(function(req, res, next) {
+/*app.use(function(req, res, next) {
     //const allowedOrigins = ['http://localhost:3000/', 'https://localhost:3000/'];
     const allowedOrigins = ['http://lagg333673034-my-test-app.netlify.app/', 'https://lagg333673034-my-test-app.netlify.app/'];
 
@@ -33,7 +33,7 @@ app.use(function(req, res, next) {
     res.header("Access-Control-Allow-credentials", true);
     res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, UPDATE");
     next();
-});
+});*/
 
 
 
