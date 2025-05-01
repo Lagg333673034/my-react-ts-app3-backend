@@ -14,7 +14,7 @@ const cors = require('cors');
 const corsOptions = {
     optionsSuccessStatus: 200, // For legacy browser support
     credentials: true, // This is important.
-    origin: "http://lagg333673034-my-test-app.netlify.app",
+    origin: "https://lagg333673034-my-test-app.netlify.app",
     //origin: "http://localhost:3000",
 };
 app.use(cors(corsOptions));
