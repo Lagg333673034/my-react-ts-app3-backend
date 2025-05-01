@@ -21,12 +21,10 @@ app.use(cors(corsOptions));
 */
 
 //v2
-//const corsMiddleware = require('./middleware/cors');
-//app.use(corsMiddleware);
-
-//v3
 app.use(function(req, res, next) {
-    const allowedOrigins = ['http://localhost:3000', 'https://localhost:3000'];
+    //const allowedOrigins = ['http://localhost:3000/', 'https://localhost:3000/'];
+    const allowedOrigins = ['http://lagg333673034-my-test-app.netlify.app/', 'https://lagg333673034-my-test-app.netlify.app/'];
+
     const origin = req.headers.origin;
     if (allowedOrigins.includes(origin)) {
          res.setHeader('Access-Control-Allow-Origin', origin);
@@ -36,7 +34,6 @@ app.use(function(req, res, next) {
     res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, UPDATE");
     next();
 });
-
 
 
 
