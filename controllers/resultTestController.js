@@ -23,6 +23,25 @@ class ResultTestController{
             next(error);
         }
     }
+    async getAnswers(req,res,next){
+        try{
+            let userId = req.fromJWT.userId;
+            let {idResultTest} = req.body;
+            let resultTest = new ResultTest();
+
+            if (
+                userId && typeof userId !== "undefined" && Number(userId) > 0 && 
+                idResultTest && typeof idResultTest !== "undefined" && Number(idResultTest) > 0 
+            ) {
+                resultTest = await resultTest.findResultTestAnswers(userId,idResultTest);
+            }
+              
+            res.status(200).json(resultTest[0]);
+        }catch(error){
+            console.log(error);
+            next(error);
+        }
+    }
     async save(req,res,next){
         try{
             let userId = req.fromJWT.userId;

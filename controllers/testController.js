@@ -1,5 +1,5 @@
 const Test = require("../models/testModel");
-const ResultTest = require("../models/resultTestModel");
+const {v4: uuidv4} = require('uuid');
 
 class TestController{
     async get(req,res,next){
@@ -55,7 +55,9 @@ class TestController{
             let userId = req.fromJWT.userId;
             let {name} = req.body;
             let test = new Test();
-            await test.create(userId,userId,name);
+            let uuid = uuidv4();
+
+            await test.create(userId,userId,name,uuid);
             
             res.status(200).json({message: "Test created"});
         }catch(error){

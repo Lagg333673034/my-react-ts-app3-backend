@@ -6,6 +6,7 @@ class ResultTest{
         this.currentData = getCurrentDataTime();
     }
 
+
     async findResultTest(idUserOwner,idTest,id=0){
         let sql_suffix = '';
         if(id > 0){
@@ -18,8 +19,10 @@ class ResultTest{
         (select ttest.name from ttest where ttest.id = tresulttest.idTest) as testName, 
         (select tuser.email from tuser where tuser.id = tresulttest.idUser) as emailRegistred, 
         tresulttest.email as emailNotRegistred, 
-        DATE_FORMAT(tresulttest.timeStatr, "%d.%m.%Y - %H:%i:%s") as timeStatr, 
-        DATE_FORMAT(tresulttest.timeFinish, "%d.%m.%Y - %H:%i:%s") as timeFinish 
+        DATE_FORMAT(tresulttest.timeStart, "%d.%m.%Y (%H:%i:%s)") as timeStart, 
+        tresulttest.timeStart as timeStart0, 
+        DATE_FORMAT(tresulttest.timeFinish, "%d.%m.%Y (%H:%i:%s)") as timeFinish, 
+        tresulttest.timeFinish as timeFinish0 
 
         FROM tresulttest 
         WHERE udln is null and 
@@ -30,11 +33,46 @@ class ResultTest{
 
         return await db.execute(sql);
     }
+    async findResultTestAnswers(idUserOwner,idTresultTest){
+        let sql = `
+SELECT 
+tresulttest.id as idTresulttest,
+ttest.id as idTest, 
+ttest.name as testName, 
+tquestion.id as idQuestion, 
+tquestion.name as questionName, 
+tanswer.id as idAnswer, 
+tanswer.name as answerName, 
+CASE WHEN tanswer.id = (
+    select tresulttestanswer.idAnswer 
+    from tresulttestanswer 
+    where tresulttestanswer.idResultTest=tresulttest.id and tresulttestanswer.idAnswer=tanswer.id) 
+THEN 1 ELSE 0 END AS userAnswer,
+tanswer.correct as correctAnswer 
+
+FROM tresulttest 
+INNER JOIN (ttest INNER JOIN (tquestion INNER JOIN tanswer on tanswer.idQuestion=tquestion.id) on 
+tquestion.idTest=ttest.id) on ttest.id=tresulttest.idTest
+
+WHERE 
+tresulttest.udln is null and 
+ttest.udln is null and 
+tquestion.udln is null and 
+tanswer.udln is null and 
+ttest.ready !=0 and 
+ttest.idUser=${idUserOwner} and 
+tresulttest.idUserOwner=${idUserOwner} and 
+tresulttest.id=${idTresultTest} 
+        `;
+        //console.log(sql);
+        return await db.execute(sql);
+    }
+
 
     async findResultTestByIdUser(idTest,idUser){
         let sql = `SELECT 
             id, idTest, 
-            DATE_FORMAT(timeFinish, "%Y-%m-%d %H:%i:%s") as timeStatr, 
+            DATE_FORMAT(timeFinish, "%Y-%m-%d %H:%i:%s") as timeStart, 
             DATE_FORMAT(timeFinish, "%Y-%m-%d %H:%i:%s") as timeFinish, 
             idUser, email 
             FROM tresulttest 
@@ -44,17 +82,17 @@ class ResultTest{
         return await db.execute(sql);
     }
 
-    async saveResultTest(idTest,timeStatr,timeFinish,idUser,answers){
+    async saveResultTest(idTest,timeStart,timeFinish,idUser,answers){
         let sql_idUserOwner = `SELECT idUser FROM ttest WHERE udln is null and id=${idTest};`;
         let result_sql_idUserOwner = await db.execute(sql_idUserOwner);
         //console.log(result_sql_idUserOwner[0][0].idUser);
         let idUserOwner = result_sql_idUserOwner[0][0].idUser;
 
         if(result_sql_idUserOwner[0][0].idUser > 0){
-            let sql = `INSERT INTO tresulttest(idUserOwner,idTest,timeStatr,timeFinish,idUser) VALUES (  
+            let sql = `INSERT INTO tresulttest(idUserOwner,idTest,timeStart,timeFinish,idUser) VALUES (  
             ${idUserOwner},
             ${idTest},
-            STR_TO_DATE('${timeStatr}',"%Y-%m-%d %H:%i:%s"),
+            STR_TO_DATE('${timeStart}',"%Y-%m-%d %H:%i:%s"),
             STR_TO_DATE('${timeFinish}',"%Y-%m-%d %H:%i:%s"),
             ${idUser} 
             );`;
@@ -64,8 +102,7 @@ class ResultTest{
             if(result_sql[0].insertId && typeof result_sql[0].insertId !== "undefined" && Number(result_sql[0].insertId) > 0){
                 let sql_insert_answer = '';
                 for(let i=0; i<answers.length; i++){
-                    sql_insert_answer = `INSERT INTO tresulttestanswer(idUserOwner,idResultTest,idAnswer) VALUES (  
-                    ${idUserOwner},
+                    sql_insert_answer = `INSERT INTO tresulttestanswer(idResultTest,idAnswer) VALUES (  
                     ${result_sql[0].insertId},
                     ${answers[i]} 
                     );`;

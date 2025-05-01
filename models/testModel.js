@@ -21,7 +21,7 @@ class Test{
         SELECT 
         ttest.id as idTest, ttest.name as testName, 
         tquestion.id as idQuestion, tquestion.name as questionName, 
-        tanswer.id as idAnswer, tanswer.name as answerName, tanswer.correct as correct
+        tanswer.id as idAnswer, tanswer.name as answerName, 0 as correct
 
         FROM ttest 
         INNER JOIN (tquestion INNER JOIN tanswer on tquestion.id=tanswer.idQuestion) on ttest.id=tquestion.idTest 
@@ -37,13 +37,13 @@ class Test{
         //console.log(sql);
         return await db.execute(sql);
     }
-
     async create(idUser,u_cr,name){
-        let sql = `INSERT INTO ttest(u_cr,d_cr,idUser,name) VALUES (
+        let sql = `INSERT INTO ttest(u_cr,d_cr,idUser,name,uuid) VALUES (
         '${u_cr}',
         '${this.currentData}',
         '${idUser}',
-        '${name}'
+        '${name}',
+        '${uuid}'
         );`;
 
         return await db.execute(sql);
