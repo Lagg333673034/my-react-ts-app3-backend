@@ -7,12 +7,7 @@ class ResultTest{
     }
 
 
-    async findResultTest(idUserOwner,idTest,id=0){
-        let sql_suffix = '';
-        if(id > 0){
-            sql_suffix = ` id=${id} and `
-        }
-
+    async findResultTest(idUserOwner,idTest){
         let sql = `
         SELECT 
         tresulttest.id, 
@@ -26,7 +21,6 @@ class ResultTest{
 
         FROM tresulttest 
         WHERE udln is null and 
-        ${sql_suffix} 
         tresulttest.idUserOwner=${idUserOwner} and 
         tresulttest.idTest=${idTest} 
         `;
@@ -67,7 +61,45 @@ tresulttest.id=${idTresultTest}
         //console.log(sql);
         return await db.execute(sql);
     }
-
+    async calculateScore(idUserOwner,idTresultTest){
+        let sql = `
+SELECT
+count(*) as questionCount, count(case incorrect when 0 then 1 else null end) as questionTrueCount
+from(
+    
+select t2.idQuestion as idQuestion, SUM(t2.incorrect) as incorrect
+from(
+    
+select t1.idQuestion, CASE WHEN t1.userAnswer != t1.correctAnswer THEN 1 ELSE 0 END AS incorrect 
+from(
+    
+SELECT tquestion.id as idQuestion, tanswer.id as idAnswer, 
+CASE WHEN tanswer.id = (
+    select tresulttestanswer.idAnswer 
+    from tresulttestanswer 
+    where tresulttestanswer.idResultTest=tresulttest.id and tresulttestanswer.idAnswer=tanswer.id) 
+THEN 1 ELSE 0 END AS userAnswer,
+tanswer.correct as correctAnswer 
+FROM tresulttest 
+INNER JOIN (ttest INNER JOIN (tquestion INNER JOIN tanswer on tanswer.idQuestion=tquestion.id) on 
+tquestion.idTest=ttest.id) on ttest.id=tresulttest.idTest
+WHERE 
+tresulttest.udln is null and 
+ttest.udln is null and 
+tquestion.udln is null and 
+tanswer.udln is null and 
+ttest.ready !=0 and 
+ttest.idUser=${idUserOwner} and 
+tresulttest.idUserOwner=${idUserOwner} and 
+tresulttest.id=${idTresultTest} 
+)t1 
+)t2 
+group by t2.idQuestion 
+)t3 
+        `;
+        //console.log(sql);
+        return await db.execute(sql);
+    }
 
     async findResultTestByIdUser(idTest,idUser){
         let sql = `SELECT 

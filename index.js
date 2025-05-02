@@ -1,24 +1,24 @@
 require('dotenv').config();
-const express = require('express');
-const mysql = require("mysql2");
 const router = require('./routes/index');
 const path = require('path');
-
-const SERVER_PORT = process.env.SERVER_PORT;
-const app = express();
 const cookieParser = require('cookie-parser');
+const express = require('express');
 
+const CORS_ORIGIN = process.env.CORS_ORIGIN;
+const SERVER_PORT = process.env.SERVER_PORT;
+
+const app = express();
 
 //v1
 const cors = require('cors');
 const corsOptions = {
     optionsSuccessStatus: 200, // For legacy browser support
     credentials: true, // This is important.
-    origin: "https://lagg333673034-my-test-app.netlify.app",
+    //origin: "https://lagg333673034-my-test-app.netlify.app",
     //origin: "http://localhost:3000",
+    origin: CORS_ORIGIN,
 };
 app.use(cors(corsOptions));
-
 
 //v2
 /*app.use(function(req, res, next) {
@@ -34,8 +34,6 @@ app.use(cors(corsOptions));
     res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, UPDATE");
     next();
 });*/
-
-
 
 app.use(express.json());
 app.use(cookieParser());
@@ -53,5 +51,3 @@ const start = async () => {
 };
 start();
 
-//const job = require('./cron');
-//job.start();

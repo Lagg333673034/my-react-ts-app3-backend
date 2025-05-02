@@ -9,9 +9,27 @@ class Question{
     find(idUser,idTest,id=0){
         let sql = '';
         if(id==0){
-            sql = `SELECT id, name, multiplOptions FROM tquestion WHERE udln is null and idUser=${idUser} and idTest=${idTest} order by sort;`;
+            sql = `
+            SELECT 
+            tquestion.id, 
+            tquestion.name, 
+            tquestion.multiplOptions, 
+            (select count(tanswer.id) from tanswer where tanswer.udln is null and tanswer.idQuestion=tquestion.id) as answerCount, 
+            (select count(tanswer.id) from tanswer where tanswer.udln is null and tanswer.idQuestion=tquestion.id and tanswer.correct=1) as answerTrueCount 
+
+            FROM tquestion 
+            WHERE tquestion.udln is null and idUser=${idUser} and idTest=${idTest} order by sort;`;
         }else{
-            sql = `SELECT id, name, multiplOptions FROM tquestion WHERE udln is null and idUser=${idUser} and idTest=${idTest} and id=${id};`;
+            sql = `
+            SELECT 
+            tquestion.id, 
+            tquestion.name, 
+            tquestion.multiplOptions, 
+            (select count(tanswer.id) from tanswer where tanswer.udln is null and tanswer.idQuestion=tquestion.id) as answerCount, 
+            (select count(tanswer.id) from tanswer where tanswer.udln is null and tanswer.idQuestion=tquestion.id and tanswer.correct=1) as answerTrueCount 
+
+            FROM tquestion 
+            WHERE tquestion.udln is null and idUser=${idUser} and idTest=${idTest} and id=${id};`;
         }
         
         return db.execute(sql);

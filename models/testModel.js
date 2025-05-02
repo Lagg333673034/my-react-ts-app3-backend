@@ -9,9 +9,27 @@ class Test{
     async find(idUser,id=0){
         let sql = '';
         if(id==0){
-            sql = `SELECT id, name, ready, published, uuid FROM ttest WHERE udln is null and idUser=${idUser} order by sort;`;
+            sql = `
+            SELECT 
+            ttest.id,
+            ttest.name, 
+            ttest.ready, 
+            ttest.published,
+            ttest.uuid, 
+            (select count(tquestion.id) from tquestion where tquestion.udln is null and tquestion.idTest=ttest.id) as questionCount 
+            FROM ttest 
+            WHERE ttest.udln is null and ttest.idUser=${idUser} order by sort;`;
         }else{
-            sql = `SELECT id, name, ready, published, uuid FROM ttest WHERE udln is null and idUser=${idUser} and id=${id};`;
+            sql = `
+            SELECT 
+            ttest.id,
+            ttest.name, 
+            ttest.ready, 
+            ttest.published,
+            ttest.uuid, 
+            (select count(tquestion.id) from tquestion where tquestion.udln is null and tquestion.idTest=ttest.id) as questionCount 
+            FROM ttest 
+            WHERE ttest.udln is null and ttest.idUser=${idUser} and id=${id};`;
         }
         
         return await db.execute(sql);
