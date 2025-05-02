@@ -112,7 +112,7 @@ class AuthController{
             const uuid = uuidv4();
             newUser.updateUuidByEmail(email,0,uuid)
 
-            const link = `http://${process.env.MAIL_CLIENT_HOST}/change-password/${uuid}`;
+            const link = `${process.env.MAIL_CLIENT_HOST}/change-password/${uuid}`;
             const html = 
             '<div>For recover password click to link below and input your new password.</div>'+
             '<a href="'+link+'" target="_blank">'+link+'</a>'+
