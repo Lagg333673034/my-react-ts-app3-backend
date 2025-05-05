@@ -244,6 +244,7 @@ class AuthController{
 
             if(!userEmail || typeof userEmail === "undefined" || !userEmail.length || userEmail.length == 0){
                 throw ErrorController.BadRequest("Error: cannot finde user email in Google API")
+                //return ("Error: cannot finde user email in Google API. Please try again.")
             }
 
 
