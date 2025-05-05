@@ -1,7 +1,7 @@
 const ErrorController = require('../controllers/errorController');
 
 module.exports = (err,req,res,next) => {
-    //console.log(err)
+    console.log(err)
 
     //esli eto oshibka, kotoryy mi predysmotreli v nashem klasse "ErrorController", to delaem tak
     if(err instanceof ErrorController){
