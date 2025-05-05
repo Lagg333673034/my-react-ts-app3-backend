@@ -204,7 +204,7 @@ class AuthController{
             //https://www.googleapis.com/oauth2/v3/tokeninfo?access_token=<TOKEN>
             const {google_access_token} = req.body
             
-            /*
+            
             const getDataFromGoogle = async (str) => 
                 await new Promise((resolve, reject) => {
                     let data = "";
@@ -230,21 +230,23 @@ class AuthController{
                     req.write(str);
                     req.end();
             })
-            userEmail = await getDataFromGoogle("data")
+            let userEmail = await getDataFromGoogle("data")
             userEmail = JSON.parse(userEmail).email
-            */
+            
 
+            /*
             let getDataFromGoogle = await fetch(
                 `https://www.googleapis.com/oauth2/v3/userinfo?access_token=${google_access_token}`
             ).then(
                 data => {return data.text()}
             )
-
             let userEmail = JSON.parse(getDataFromGoogle).email;
+            */
 
-            if(!userEmail || typeof userEmail === "undefined" || userEmail.length == 0){
+            if(!userEmail || typeof userEmail === "undefined" || !userEmail.length || userEmail.length == 0){
                 throw ErrorController.BadRequest("Error: cannot finde user email in Google API")
             }
+
 
             let user = await User.findByEmail(userEmail);
             if(user && user.id && typeof user.id !== "undefined" && Number(user.id) > 0){

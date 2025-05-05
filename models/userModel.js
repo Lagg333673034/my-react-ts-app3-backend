@@ -24,7 +24,7 @@ class User{
         ELSE 'Unknown method' END AS entryMethodName 
 
         FROM tuser 
-        WHERE udln is null and email = '${email}';`;
+        WHERE udln is null and email='${email}';`;
 
         let result = await db.execute(sql);
         return result[0][0];
