@@ -16,7 +16,50 @@ class User{
     static async findByEmail(email){
         console.log("findByEmail==");
         console.log(email);
-        let sql = `SELECT 
+
+        try{
+            //try 1
+            let sql = `SELECT 
+            id, email, password, entryMethod, 
+            CASE 
+            WHEN entryMethod=1 THEN 'Email & Password' 
+            WHEN entryMethod=2 THEN 'Google' 
+            ELSE 'Unknown method' END AS entryMethodName 
+    
+            FROM tuser 
+            WHERE udln is null and email='${email}';`;
+    
+            let result = await db.execute(sql);
+            return result[0][0];
+        }catch(e){
+            console.log("error=1=");
+            console.log(e);
+
+            try{
+                //try 2
+                let sql = `SELECT 
+                id, email, password, entryMethod, 
+                CASE 
+                WHEN entryMethod=1 THEN 'Email & Password' 
+                WHEN entryMethod=2 THEN 'Google' 
+                ELSE 'Unknown method' END AS entryMethodName 
+        
+                FROM tuser 
+                WHERE udln is null and email='${email}';`;
+        
+                let result = await db.execute(sql);
+                return result[0][0];
+            }catch(e){
+                console.log("error=2=");
+                console.log(e);
+    
+                
+            }
+        }
+
+        
+
+        /*let sql = `SELECT 
         id, email, password, entryMethod, 
         CASE 
         WHEN entryMethod=1 THEN 'Email & Password' 
@@ -27,7 +70,7 @@ class User{
         WHERE udln is null and email='${email}';`;
 
         let result = await db.execute(sql);
-        return result[0][0];
+        return result[0][0];*/
     }
     static async findByUuid(uuid){
         let sql = `SELECT id, email, password FROM tuser WHERE udln is null and uuidForRecoverPassword = '${uuid}';`;

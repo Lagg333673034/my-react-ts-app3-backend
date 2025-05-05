@@ -95,15 +95,14 @@ class AuthController{
                     throw ErrorController.UnAuthorizedError();
                 }
 
-                const userDataFromToken = jwt.verify(refreshToken, process.env.JWT_REFRESH_SECRET_KEY);
+                let userDataFromToken = await jwt.verify(refreshToken, process.env.JWT_REFRESH_SECRET_KEY);
                 let tokenFromDB = await Token.findDataByRefreshToken(refreshToken);
 
                 if(!userDataFromToken || !tokenFromDB){
                     throw ErrorController.UnAuthorizedError();
-
                 }else{
                     const user = await User.findById(tokenFromDB.idUser)
-                    const tokens = Token.generate({userId: user.id});
+                    const tokens = await Token.generate({userId: user.id});
                     await Token.save(user.id, tokens.refreshToken);
                     res.cookie('refreshToken', tokens.refreshToken, {maxAge: cookieMaxAge, httpOnly: true});
             
