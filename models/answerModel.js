@@ -1,10 +1,6 @@
 const db = require("../db");
-const {getCurrentDataTime} = require("../functions");
 
 class Answer{
-    constructor(){
-        this.currentData = getCurrentDataTime();
-    }
     find(idUser,idQuestion,id=0){
         let sql = '';
         if(id==0){
@@ -18,7 +14,7 @@ class Answer{
     create(idUser,idQuestion,u_cr,name){
         let sql = `INSERT INTO tanswer(u_cr,d_cr,idUser,idQuestion,name) VALUES (
         '${u_cr}',
-        '${this.currentData}',
+        now(),
         '${idUser}',
         '${idQuestion}',
         '${name}' 
@@ -29,7 +25,7 @@ class Answer{
     update(idUser,idQuestion,id,u_upd,name){
         let sql = `UPDATE tanswer SET 
         u_upd='${u_upd}', 
-        d_upd='${this.currentData}', 
+        d_upd=now(), 
         name='${name}' 
         WHERE udln is null and idUser=${idUser} and idQuestion=${idQuestion} and id=${id};`;
 
@@ -38,7 +34,7 @@ class Answer{
     setCorrect(idUser,idQuestion,id,u_upd,correct){
         let sql = `UPDATE tanswer SET 
         u_upd='${u_upd}', 
-        d_upd='${this.currentData}', 
+        d_upd=now(), 
         correct='${correct}' 
         WHERE udln is null and idUser=${idUser} and idQuestion=${idQuestion} and id=${id};`;
 
@@ -46,9 +42,9 @@ class Answer{
     }
     delete(idUser,idQuestion,id,u_upd){
         let sql = `UPDATE tanswer SET 
-        udln='${this.currentData}', 
+        udln=now(), 
         u_upd='${u_upd}', 
-        d_upd='${this.currentData}' 
+        d_upd=now() 
         WHERE udln is null and idUser=${idUser} and idQuestion=${idQuestion} and id=${id};`;
 
         return db.execute(sql);

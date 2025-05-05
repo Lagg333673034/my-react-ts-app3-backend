@@ -1,12 +1,6 @@
 const db = require("../db");
-const {getCurrentDataTime} = require("../functions");
 
 class ResultTest{
-    constructor(){
-        this.currentData = getCurrentDataTime();
-    }
-
-
     async findResultTest(idUserOwner,idTest){
         let sql = `
         SELECT 

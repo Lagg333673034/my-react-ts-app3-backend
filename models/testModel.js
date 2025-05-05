@@ -1,11 +1,6 @@
 const db = require("../db");
-const {getCurrentDataTime} = require("../functions");
 
 class Test{
-    constructor(){
-        this.currentData = getCurrentDataTime();
-    }
-    
     async find(idUser,id=0){
         let sql = '';
         if(id==0){
@@ -58,7 +53,7 @@ class Test{
     async create(idUser,u_cr,name,uuid){ 
         let sql = `INSERT INTO ttest(u_cr,d_cr,idUser,name,uuid) VALUES (
         '${u_cr}',
-        '${this.currentData}',
+        now(),
         '${idUser}',
         '${name}',
         '${uuid}'
@@ -69,7 +64,7 @@ class Test{
     async update(idUser,id,u_upd,name){
         let sql = `UPDATE ttest SET 
         u_upd='${u_upd}', 
-        d_upd='${this.currentData}', 
+        d_upd=now(), 
         name='${name}' 
         WHERE udln is null and idUser=${idUser} and id=${id};`;
 
@@ -78,7 +73,7 @@ class Test{
     async setReady(idUser,id,u_upd,ready){
         let sql = `UPDATE ttest SET 
         u_upd='${u_upd}', 
-        d_upd='${this.currentData}', 
+        d_upd=now(), 
         ready='${ready}' 
         WHERE udln is null and idUser=${idUser} and id=${id};`;
 
@@ -87,7 +82,7 @@ class Test{
     async setPublished(idUser,id,u_upd,published){
         let sql = `UPDATE ttest SET 
         u_upd='${u_upd}', 
-        d_upd='${this.currentData}', 
+        d_upd=now(), 
         published='${published}' 
         WHERE udln is null and idUser=${idUser} and id=${id};`;
 
@@ -105,24 +100,24 @@ class Test{
         tquestion_id_array.length > 0 &&
         tquestion_id_array.map(async tquestion_id => {
                     sql_tanswer = `UPDATE tanswer SET 
-                    udln='${this.currentData}', 
+                    udln=now(), 
                     u_upd='${u_upd}', 
-                    d_upd='${this.currentData}' 
+                    d_upd=now() 
                     WHERE udln is null and idUser=${idUser} and idQuestion=${tquestion_id.id};`;
                     await db.execute(sql_tanswer);
         })
 
         sql_tquestion = `UPDATE tquestion SET 
-        udln='${this.currentData}', 
+        udln=now(), 
         u_upd='${u_upd}', 
-        d_upd='${this.currentData}' 
+        d_upd=now() 
         WHERE udln is null and idUser=${idUser} and idTest=${id};`;
         await db.execute(sql_tquestion);
 
         sql_ttest = `UPDATE ttest SET 
-        udln='${this.currentData}', 
+        udln=now(), 
         u_upd='${u_upd}', 
-        d_upd='${this.currentData}' 
+        d_upd=now() 
         WHERE udln is null and idUser=${idUser} and id=${id};`;
         await db.execute(sql_ttest);
     }

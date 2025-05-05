@@ -1,18 +1,32 @@
 const User = require("../models/userModel");
+const ErrorController = require("./errorController");
 
 class UserController{
-    async get(req,res,next){
+    async getOne(req,res,next){
         try{
-            let {id} = req.body;
-            let user = new User();
+            //console.log("user=0=")
+            let userId = req.fromJWT.userId;
 
-            if (id && typeof id !== "undefined" && id > 0) {
-                user = await user.find(id);
-            }else{
-                user = await user.find();
+            if (!userId || typeof userId === "undefined" || Number(userId) <= 0) {
+                throw ErrorController.BadRequest(`Token not found`);
             }
-              
-            res.status(200).json(user[0]);
+
+            let user = await User.findById(userId)
+
+            //console.log("user==")
+            //console.log(user)
+
+            res.status(200).json(user);
+        }catch(error){
+            console.log(error);
+            next(error);
+        }
+    }
+    async getAll(req,res,next){
+        try{
+            let user = await User.findAll()
+
+            res.status(200).json(user);
         }catch(error){
             console.log(error);
             next(error);

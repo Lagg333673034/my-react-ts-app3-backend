@@ -1,115 +1,122 @@
 const db = require("../db");
-const {getCurrentDataTime} = require("../functions");
 
 class User{
-    constructor(){
-        this.currentData = getCurrentDataTime();
-    }
-    find(id=0){
-        let sql = '';
-        if(id==0){
-            sql = `SELECT id, email FROM tuser WHERE udln is null;`;
-        }else{
-            sql = `SELECT id, email FROM tuser WHERE udln is null and id = ${id};`;
-        }
+    static async findAll(){
+        let sql = `SELECT id, email FROM tuser WHERE udln is null;`;
         
-        return db.execute(sql);
+        let result = await db.execute(sql);
+        return result[0][0];
     }
-    findByEmail(email){
-        let sql = `SELECT id, email, password FROM tuser WHERE udln is null and email = '${email}';`;
- 
-        return db.execute(sql);
+    static async findById(id){
+        let sql = `SELECT id, email FROM tuser WHERE udln is null and id = ${id};`;
+        
+        let result = await db.execute(sql);
+        return result[0][0];
     }
-    findByUuid(uuid){
-        let sql = '';
-        if(uuid != ''){
-            sql = `SELECT id, email, password FROM tuser WHERE udln is null and uuidForRecoverPassword = '${uuid}';`;
-        }else{
-            sql = `SELECT 1 FROM tuser WHERE udln is null;`;
-        }
- 
-        return db.execute(sql);
+    static async findByEmail(email){
+        let sql = `SELECT 
+        id, email, password, entryMethod, 
+        CASE 
+        WHEN entryMethod=1 THEN 'Email & Password' 
+        WHEN entryMethod=2 THEN 'Google' 
+        ELSE 'Unknown method' END AS entryMethodName 
+
+        FROM tuser 
+        WHERE udln is null and email = '${email}';`;
+
+        let result = await db.execute(sql);
+        return result[0][0];
     }
-    registration(u_cr,email,password){
-        let sql = `INSERT INTO tuser(u_cr,d_cr,email,password) VALUES (
+    static async findByUuid(uuid){
+        let sql = `SELECT id, email, password FROM tuser WHERE udln is null and uuidForRecoverPassword = '${uuid}';`;
+        
+        let result = await db.execute(sql);
+        return result[0][0];
+    }
+    static async registratioUsingEmailAndPassword(u_cr,email,password){
+        let sql = `INSERT INTO tuser(u_cr,d_cr,entryMethod,email,password) VALUES (
         '${u_cr}',
-        '${this.currentData}',
+        now(),
+        1,
         '${email}',
         '${password}'
         );`;
 
-        return db.execute(sql);
+        let result = await db.execute(sql);
+        return result[0][0];
     }
-    /*create(u_cr,email,password){
-        let sql = `INSERT INTO tuser(u_cr,d_cr,email,password) VALUES (
+    static async registratioUsingGoogle(u_cr,email){
+        let sql = `INSERT INTO tuser(u_cr,d_cr,entryMethod,email) VALUES (
         '${u_cr}',
-        '${this.currentData}',
-        '${email}',
-        '${password}'
+        now(),
+        2,
+        '${email}'
         );`;
 
-        return db.execute(sql);
-    }*/
-
-
-    update(id,u_upd,email){
+        let result = await db.execute(sql);
+        return result[0][0];
+    }
+    static async update(id,u_upd,email){
         let sql = `UPDATE tuser SET 
         u_upd='${u_upd}', 
-        d_upd='${this.currentData}', 
+        d_upd=now(), 
         email='${email}' 
         WHERE udln is null and id=${id};`;
 
-        return db.execute(sql);
+        let result = await db.execute(sql);
+        return result[0][0];
     }
-    updateUuidByEmail(email,u_upd,uuid){
+    static async updateUuidByEmail(email,u_upd,uuid){
         let sql = `UPDATE tuser SET 
         u_upd='${u_upd}', 
-        d_upd='${this.currentData}', 
+        d_upd=now(), 
         uuidForRecoverPassword='${uuid}' 
         WHERE udln is null and email='${email}';`;
 
-        return db.execute(sql);
+        let result = await db.execute(sql);
+        return result[0][0];
     }
-    updatePasswordByEmail(email,uuid,u_upd,password){
+    static async updatePasswordByEmail(email,uuid,u_upd,password){
         let sql = `UPDATE tuser SET 
         u_upd='${u_upd}', 
-        d_upd='${this.currentData}', 
+        d_upd=now(), 
         password='${password}', 
         uuidForRecoverPassword='' 
         WHERE udln is null and email='${email}' and uuidForRecoverPassword='${uuid}' ;`;
 
-        return db.execute(sql);
+        let result = await db.execute(sql);
+        return result[0][0];
     }
 
 
-    async delete(id,u_upd){
+    static async delete(id,u_upd){
         let sql_tanswer = `UPDATE tanswer SET 
-        udln='${this.currentData}', 
+        udln=now(), 
         u_upd='${u_upd}', 
-        d_upd='${this.currentData}' 
+        d_upd=now() 
         WHERE udln is null and idUser=${id};`;
         await db.execute(sql_tanswer);
 
         let sql_tquestion = `UPDATE tquestion SET 
-        udln='${this.currentData}', 
+        udln=now(), 
         u_upd='${u_upd}', 
-        d_upd='${this.currentData}' 
+        d_upd=now() 
         WHERE udln is null and idUser=${id};`;
         await db.execute(sql_tquestion);
 
         let sql_ttest = `UPDATE ttest SET 
-        udln='${this.currentData}', 
+        udln=now(), 
         u_upd='${u_upd}', 
-        d_upd='${this.currentData}' 
+        d_upd=now() 
         WHERE udln is null and idUser=${id};`;
         await db.execute(sql_ttest);
 
         let sql = `UPDATE tuser SET 
-        udln='${this.currentData}', 
+        udln=now(), 
         u_upd='${u_upd}', 
-        d_upd='${this.currentData}' 
+        d_upd=now() 
         WHERE udln is null and id=${id};`;
-        return db.execute(sql);
+        return await db.execute(sql);
     }
 }
 

@@ -1,4 +1,4 @@
-exports.getCurrentDataTime = () => {
+/*exports.getCurrentDataTime = () => {
     let datetime = new Date();
     let year = datetime.getFullYear();
     let month = datetime.getMonth() + 1;
@@ -15,7 +15,7 @@ exports.getCurrentDataTime = () => {
 
     return `${year}-${month}-${day} ${hour}:${minute}:${second}`;
 }
-
+*/
 
 
 

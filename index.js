@@ -3,11 +3,14 @@ const router = require('./routes/index');
 const path = require('path');
 const cookieParser = require('cookie-parser');
 const express = require('express');
+const errorMiddleware = require('./middleware/error');
 
 const CORS_ORIGIN = process.env.CORS_ORIGIN;
 const SERVER_PORT = process.env.SERVER_PORT;
 
 const app = express();
+app.use(express.json());
+app.use(cookieParser());
 
 //v1
 const cors = require('cors');
@@ -35,10 +38,9 @@ app.use(cors(corsOptions));
     next();
 });*/
 
-app.use(express.json());
-app.use(cookieParser());
 app.use(express.static(path.resolve(__dirname, 'static')));
 app.use('/', router);
+app.use(errorMiddleware);
 
 const start = async () => {
     try{
@@ -50,4 +52,3 @@ const start = async () => {
     }
 };
 start();
-

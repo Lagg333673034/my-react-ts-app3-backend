@@ -1,11 +1,6 @@
 const db = require("../db");
-const {getCurrentDataTime} = require("../functions");
-const Answer = require("./answerModel");
 
 class Question{
-    constructor(){
-        this.currentData = getCurrentDataTime();
-    }
     find(idUser,idTest,id=0){
         let sql = '';
         if(id==0){
@@ -37,7 +32,7 @@ class Question{
     create(idUser,idTest,u_cr,name){
         let sql = `INSERT INTO tquestion(u_cr,d_cr,idUser,idTest,name) VALUES (
         '${u_cr}',
-        '${this.currentData}',
+        now(),
         '${idUser}',
         '${idTest}',
         '${name}'
@@ -48,7 +43,7 @@ class Question{
     update(idUser,idTest,id,u_upd,name){
         let sql = `UPDATE tquestion SET 
         u_upd='${u_upd}', 
-        d_upd='${this.currentData}', 
+        d_upd=now(), 
         name='${name}' 
         WHERE udln is null and idUser=${idUser} and idTest=${idTest} and id=${id};`;
 
@@ -56,17 +51,17 @@ class Question{
     }
     delete(idUser,idTest,id,u_upd){
         let sql_tanswer = `UPDATE tanswer SET 
-        udln='${this.currentData}', 
+        udln=now(), 
         u_upd='${u_upd}', 
-        d_upd='${this.currentData}' 
+        d_upd=now() 
         WHERE udln is null and idUser=${idUser} and idQuestion=${id};`;
 
         db.execute(sql_tanswer);
 
         let sql = `UPDATE tquestion SET 
-        udln='${this.currentData}', 
+        udln=now(), 
         u_upd='${u_upd}', 
-        d_upd='${this.currentData}' 
+        d_upd=now() 
         WHERE udln is null and idUser=${idUser} and idTest=${idTest} and id=${id};`;
         
         return db.execute(sql);
