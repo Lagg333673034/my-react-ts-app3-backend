@@ -2,8 +2,8 @@ require('dotenv').config();
 const db = require("../db");
 const jwt = require('jsonwebtoken');
 
-const tokenAccessExpiresIn = "5m";
-const tokenRefreshExpiresIn = "3d";
+const tokenAccessExpiresIn = "30m";
+const tokenRefreshExpiresIn = "15d";
 
 class Token{
     static generate(payload){
