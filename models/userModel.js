@@ -14,6 +14,8 @@ class User{
         return result[0][0];
     }
     static async findByEmail(email){
+        console.log("findByEmail==");
+        console.log(email);
         let sql = `SELECT 
         id, email, password, entryMethod, 
         CASE 
