@@ -1,8 +1,8 @@
 require('dotenv').config();
+const express = require('express');
 const router = require('./routes/index');
 const path = require('path');
 const cookieParser = require('cookie-parser');
-const express = require('express');
 const errorMiddleware = require('./middleware/error');
 
 const CORS_ORIGIN = process.env.CORS_ORIGIN;
@@ -52,3 +52,7 @@ const start = async () => {
     }
 };
 start();
+
+
+const doJob = require('./doJob');
+doJob.start();
