@@ -54,5 +54,5 @@ const start = async () => {
 start();
 
 
-const doJob = require('./doJob');
-doJob.start();
+const job = require('./cron');
+job.start();

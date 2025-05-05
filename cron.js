@@ -3,7 +3,7 @@ const https = require('https');
 
 //https://crontab.guru/#*/10_*_*_*_*
 
-const doJob = new cron.CronJob('*/3 * * * *', function(){
+const job = new cron.CronJob('*/3 * * * *', function(){
     console.log('not sleep');
 
     const url = "https://lagg333673034-my-test-app.netlify.app";
@@ -21,4 +21,4 @@ const doJob = new cron.CronJob('*/3 * * * *', function(){
 
 });
 
-module.exports = doJob;
+module.exports = job;
