@@ -68,8 +68,8 @@ class ResultTestController{
             resultAlreadyPassed = resultAlreadyPassed[0][0];
             if(resultAlreadyPassed && resultAlreadyPassed !== "undefined" && resultAlreadyPassed.id && resultAlreadyPassed.id > 0){
                 let diff = Date.now() - new Date(resultAlreadyPassed.timeFinish);
-                if(diff <= 1000 * 60 * 10){
-                    return res.status(400).json({message: "You already passed this test. If you want to pass this test again, wait 10 minutes."});
+                if(diff <= 1000 * 60){
+                    return res.status(400).json({message: "You already passed this test. If you want to pass this test again, wait few minutes."+diff});
                 }
             }
             /*---------------------------------------------------------*/
