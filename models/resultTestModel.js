@@ -138,6 +138,22 @@ group by t2.idQuestion
         }
     }
 
+    static async delete(idUserOwner,idTest,id){
+        let sql_tresulttestanswer = `UPDATE tresulttestanswer SET 
+        udln=now(), 
+        u_upd='${idUserOwner}', 
+        d_upd=now() 
+        WHERE udln is null and idResultTest=${id};`;
+        await db.execute(sql_tresulttestanswer);
+
+        let sql_tresulttest = `UPDATE tresulttest SET 
+        udln=now(), 
+        u_upd='${idUserOwner}', 
+        d_upd=now() 
+        WHERE udln is null and idUserOwner=${idUserOwner} and idTest=${idTest} and id=${id};`;
+        await db.execute(sql_tresulttest);
+    }
+
 }
 
 module.exports = ResultTest;

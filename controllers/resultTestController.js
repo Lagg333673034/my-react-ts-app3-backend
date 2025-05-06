@@ -110,6 +110,19 @@ class ResultTestController{
             next(error);
         }
     }
+    async delete(req,res,next){
+        try{
+            let userId = req.fromJWT.userId;
+            let {idTest,id} = req.body;
+           
+            let del = await ResultTest.delete(userId,idTest,id);
+
+            res.status(200).json({message: "Result created"});
+        }catch(error){
+            console.log(error);
+            next(error);
+        }
+    }
 }
 
 module.exports = new ResultTestController();
