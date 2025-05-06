@@ -98,8 +98,8 @@ group by t2.idQuestion
     async findResultTestByIdUser(idTest,idUser){
         let sql = `SELECT 
             id, idTest, 
-            DATE_FORMAT(timeFinish, "%Y-%m-%d %H:%i:%s") as timeStart, 
-            DATE_FORMAT(timeFinish, "%Y-%m-%d %H:%i:%s") as timeFinish, 
+            DATE_FORMAT(timeStart, "%Y-%m-%dT%H:%i:%s.000Z") as timeStart,
+            DATE_FORMAT(timeFinish, "%Y-%m-%dT%H:%i:%s.000Z") as timeFinish,
             idUser, email 
             FROM tresulttest 
             WHERE udln is null and idTest=${idTest} and idUser='${idUser}' 
@@ -118,8 +118,8 @@ group by t2.idQuestion
             let sql = `INSERT INTO tresulttest(idUserOwner,idTest,timeStart,timeFinish,idUser) VALUES (  
             ${idUserOwner},
             ${idTest},
-            STR_TO_DATE('${timeStart}',"%Y-%m-%d %H:%i:%s"),
-            STR_TO_DATE('${timeFinish}',"%Y-%m-%d %H:%i:%s"),
+            STR_TO_DATE('${timeStart}',"%Y-%m-%dT%H:%i:%s.000Z"),
+            STR_TO_DATE('${timeFinish}',"%Y-%m-%dT%H:%i:%s.000Z"),
             ${idUser} 
             );`;
             let result_sql = await db.execute(sql);

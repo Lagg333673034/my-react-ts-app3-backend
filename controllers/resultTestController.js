@@ -1,4 +1,5 @@
 const ResultTest = require("../models/resultTestModel");
+const System = require("../models/systemModel");
 
 class ResultTestController{
     async get(req,res,next){
@@ -62,16 +63,22 @@ class ResultTestController{
             let userId = req.fromJWT.userId;
             let {idTest,timeStart,timeFinish,answers} = req.body;
             let resultTest = new ResultTest();
-            
             /*---------------------------------------------------------*/
-            let resultAlreadyPassed = await resultTest.findResultTestByIdUser(idTest,userId);
-            resultAlreadyPassed = resultAlreadyPassed[0][0];
-            if(resultAlreadyPassed && resultAlreadyPassed !== "undefined" && resultAlreadyPassed.id && resultAlreadyPassed.id > 0){
+            let resultLastTest = await resultTest.findResultTestByIdUser(idTest,userId);
+            resultLastTest = resultLastTest[0][0];
+            if(resultLastTest && resultLastTest !== "undefined" && resultLastTest.id && resultLastTest.id > 0){
                 
-                let diff = Date.now() - new Date(resultAlreadyPassed.timeFinish);
-                if(diff <= 1000 * 60){
+                let timeNow = await System.getCurrentSystemTime()
+                timeNow = new Date(timeNow.time).toISOString();
+                let timeLastTest = new Date(resultLastTest.timeFinish).toISOString();
+                let diff = new Date(timeNow) - new Date(timeLastTest);
+                if(diff <= 1000*60*5){
+                    /*"==timeNow=="+new Date(timeNow).toISOString()+
+                    "==timeLastTest=="+new Date(timeLastTest).toISOString()+
+                    "==timeStart=A="+new Date(timeStart).toLocaleString()+
+                    "==timeFinish=A="+new Date(timeFinish).toLocaleString()*/
                     return res.status(400).json({message: 
-                        "You already passed this test. You can pass this test again tomorrow."
+                        "You already passed this test. You can pass this test again after five minutes."
                     });
                 }
             }

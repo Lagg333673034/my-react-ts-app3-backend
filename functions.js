@@ -1,4 +1,6 @@
-exports.getCurrentDataTime = () => {
+const db = require("./db");
+
+/*exports.getCurrentDataTime = () => {
     let datetime = new Date();
     let year = datetime.getFullYear();
     let month = datetime.getMonth() + 1;
@@ -14,9 +16,7 @@ exports.getCurrentDataTime = () => {
     second = second.toString().padStart(2, '0');
 
     return `${year}-${month}-${day} ${hour}:${minute}:${second}`;
-}
-
-
+}*/
 
 
 

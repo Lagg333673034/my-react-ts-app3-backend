@@ -199,54 +199,10 @@ class AuthController{
  
     static async loginUsingGoogle(req,res,next){
         try{
-            /*
-            //https://www.googleapis.com/oauth2/v3/userinfo?access_token=<TOKEN>
-            //https://www.googleapis.com/oauth2/v3/tokeninfo?access_token=<TOKEN>
-            const {google_access_token} = req.body
-            const getDataFromGoogle = async (str) => 
-                await new Promise((resolve, reject) => {
-                    let data = "";
-                    const req = https.request(
-                        {
-                            host: 'www.googleapis.com',
-                            port: '443',
-                            path: `/oauth2/v3/userinfo?access_token=${google_access_token}`,
-                            method: 'GET',
-                            headers: {
-                                "Content-Type": "application/json",
-                            },
-                        },
-                        (res) => {
-                            res.on("data", (d) => {
-                                data += d.toString();
-                            });
-                            res.on("end", () => {
-                                resolve(data);
-                            });
-                        }
-                    );
-                    req.write(str);
-                    req.end();
-            })
-            let userEmail = await getDataFromGoogle("data")
-            userEmail = JSON.parse(userEmail).email
-            */
-            /*
-            let getDataFromGoogle = await fetch(
-                `https://www.googleapis.com/oauth2/v3/userinfo?access_token=${google_access_token}`
-            ).then(
-                data => {return data.text()}
-            )
-            let userEmail = JSON.parse(getDataFromGoogle).email;
-            */
-
             const {email} = req.body
-
-
 
             if(!email || typeof email === "undefined" || !email.length || email.length == 0){
                 throw ErrorController.BadRequest("Error: cannot find user email in Google API")
-                //return ("Error: cannot finde user email in Google API. Please try again.")
             }
 
 
@@ -270,9 +226,6 @@ class AuthController{
 
 
             //login.....
-            
-            //user = await User.findByEmail(email);
-
             const tokens = Token.generate({userId: user.id});
             await Token.save(user.id, tokens.refreshToken);
             res.cookie('refreshToken', tokens.refreshToken, {maxAge: cookieMaxAge, httpOnly: true});

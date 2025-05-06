@@ -1,4 +1,5 @@
 const Test = require("../models/testModel");
+const System = require("../models/systemModel");
 const {v4: uuidv4} = require('uuid');
 
 class TestController{
@@ -43,7 +44,12 @@ class TestController{
             }
 
             test = await test.readyForPass(id,uuid);
-            res.status(200).json(test[0]);
+            let serverTime = await System.getCurrentSystemTime();
+
+            res.status(200).json({
+                rows:test[0],
+                serverTime:serverTime
+            });
 
         }catch(error){
             console.log(error);
