@@ -91,7 +91,11 @@ class ResultTestController{
                 return res.status(400).json({message: "userId error"});
             }
 
-            resultTest = await resultTest.saveResultTest(idTest,timeStart,timeFinish,userId,answers);
+            /*---------------------------------------------------------*/
+            if (answers && typeof userId !== "undefined" && answers.length > 0) {
+                resultTest = await resultTest.saveResultTest(idTest,timeStart,timeFinish,userId,answers);
+            }
+            /*---------------------------------------------------------*/
 
             res.status(200).json({message: "Result created"});
         }catch(error){

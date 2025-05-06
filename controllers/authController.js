@@ -199,11 +199,10 @@ class AuthController{
  
     static async loginUsingGoogle(req,res,next){
         try{
+            /*
             //https://www.googleapis.com/oauth2/v3/userinfo?access_token=<TOKEN>
             //https://www.googleapis.com/oauth2/v3/tokeninfo?access_token=<TOKEN>
             const {google_access_token} = req.body
-            
-            
             const getDataFromGoogle = async (str) => 
                 await new Promise((resolve, reject) => {
                     let data = "";
@@ -231,8 +230,7 @@ class AuthController{
             })
             let userEmail = await getDataFromGoogle("data")
             userEmail = JSON.parse(userEmail).email
-            
-
+            */
             /*
             let getDataFromGoogle = await fetch(
                 `https://www.googleapis.com/oauth2/v3/userinfo?access_token=${google_access_token}`
@@ -242,13 +240,17 @@ class AuthController{
             let userEmail = JSON.parse(getDataFromGoogle).email;
             */
 
-            if(!userEmail || typeof userEmail === "undefined" || !userEmail.length || userEmail.length == 0){
-                throw ErrorController.BadRequest("Error: cannot finde user email in Google API")
+            const {email} = req.body
+
+
+
+            if(!email || typeof email === "undefined" || !email.length || email.length == 0){
+                throw ErrorController.BadRequest("Error: cannot find user email in Google API")
                 //return ("Error: cannot finde user email in Google API. Please try again.")
             }
 
 
-            let user = await User.findByEmail(userEmail);
+            let user = await User.findByEmail(email);
             if(user && user.id && typeof user.id !== "undefined" && Number(user.id) > 0){
                 //exist in database. Check entryMethod
                 if(user.entryMethod == 2){
@@ -261,13 +263,15 @@ class AuthController{
                 }
             }else{
                 //NOT exist in database. then create.
-                await User.registratioUsingGoogle(0,userEmail);
+                await User.registratioUsingGoogle(0,email);
+
+                user = await User.findByEmail(email);
             }
 
 
             //login.....
             
-            user = await User.findByEmail(userEmail);
+            //user = await User.findByEmail(email);
 
             const tokens = Token.generate({userId: user.id});
             await Token.save(user.id, tokens.refreshToken);
