@@ -27,7 +27,6 @@ app.use(cors(corsOptions));
 //v2
 app.use(function(req, res, next) {
     //const allowedOrigins = ['http://localhost:3000','https://lagg333673034-my-test-app.netlify.app'];
-    //const allowedOrigins = [`${CORS_ORIGIN}`, `${CORS_ORIGIN1}`];
     const allowedOrigins = [`${CORS_ORIGIN}`];
 
     const origin = req.headers.origin;
@@ -55,6 +54,7 @@ const start = async () => {
     }
 };
 start();
+
 
 
 //const job = require('./cron');

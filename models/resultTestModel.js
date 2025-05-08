@@ -9,8 +9,10 @@ class ResultTest{
         (select tuser.email from tuser where tuser.id = tresulttest.idUser) as emailRegistred, 
         tresulttest.email as emailNotRegistred, 
         DATE_FORMAT(tresulttest.timeStart, "%d.%m.%Y (%H:%i:%s)") as timeStart, 
+        DATE_FORMAT(tresulttest.timeStart, "%Y-%m-%dT%H:%i:%s.000Z") as timeStartUTC, 
         tresulttest.timeStart as timeStart0, 
         DATE_FORMAT(tresulttest.timeFinish, "%d.%m.%Y (%H:%i:%s)") as timeFinish, 
+        DATE_FORMAT(tresulttest.timeFinish, "%Y-%m-%dT%H:%i:%s.000Z") as timeFinishUTC, 
         tresulttest.timeFinish as timeFinish0 
 
         FROM tresulttest 
