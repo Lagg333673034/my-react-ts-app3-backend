@@ -7,14 +7,11 @@ const jwt = require('jsonwebtoken');
 const {v4: uuidv4} = require('uuid');
 const nodemailer = require('nodemailer');
 const ErrorController = require('../controllers/errorController');
-const https = require('https');
 
 const transporter = nodemailer.createTransport({host: process.env.MAIL_HOST,secure: true,auth:{user: process.env.MAIL_USER,pass: process.env.MAIL_USER_PASSWORDFOR_SEND_EMAIL, }});
 const cookieMaxAge = 30*24*60*60*1000; //30d
 
 class AuthController{
-    temp1;
-    
     static async loginUsingEmailPassword(req,res,next){
         try{
             const errors = validationResult(req);
@@ -41,7 +38,13 @@ class AuthController{
             
             const tokens = Token.generate({userId: user.id});
             await Token.save(user.id, tokens.refreshToken);
-            res.cookie('refreshToken', tokens.refreshToken, {maxAge: cookieMaxAge, httpOnly: true});
+            res.cookie('refreshToken', tokens.refreshToken, {
+                maxAge: cookieMaxAge, 
+                httpOnly: true, 
+                secure: true, 
+                sameSite: 'none',
+                /*Partitioned: true,*/
+            });
 
             return res.json({
                 token: tokens.accessToken,
@@ -104,7 +107,13 @@ class AuthController{
                     const user = await User.findById(tokenFromDB.idUser)
                     const tokens = await Token.generate({userId: user.id});
                     await Token.save(user.id, tokens.refreshToken);
-                    res.cookie('refreshToken', tokens.refreshToken, {maxAge: cookieMaxAge, httpOnly: true});
+                    res.cookie('refreshToken', tokens.refreshToken, {
+                        maxAge: cookieMaxAge, 
+                        httpOnly: true, 
+                        secure: true, 
+                        sameSite: 'none',
+                        /*Partitioned: true,*/
+                    });
             
                     return res.json({
                         token: tokens.accessToken,
@@ -228,7 +237,13 @@ class AuthController{
             //login.....
             const tokens = Token.generate({userId: user.id});
             await Token.save(user.id, tokens.refreshToken);
-            res.cookie('refreshToken', tokens.refreshToken, {maxAge: cookieMaxAge, httpOnly: true});
+            res.cookie('refreshToken', tokens.refreshToken, {
+                maxAge: cookieMaxAge, 
+                httpOnly: true, 
+                secure: true, 
+                sameSite: 'none',
+                /*Partitioned: true,*/
+            });
 
             return res.json({
                 token: tokens.accessToken,
