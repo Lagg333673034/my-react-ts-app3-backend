@@ -9,13 +9,25 @@ const nodemailer = require('nodemailer');
 const ErrorController = require('../controllers/errorController');
 
 const transporter = nodemailer.createTransport({
-    host: process.env.MAIL_HOST,
+    /* host: process.env.MAIL_HOST,
     port: 465,
     secure: true,
     auth:{
         user: process.env.MAIL_USER,
         pass: process.env.MAIL_USER_PASSWORDFOR_SEND_EMAIL, 
+    }, */
+    host: process.env.MAIL_HOST,
+    port: 587,
+    secure: false,
+    auth: {
+        user: process.env.MAIL_USER,
+        pass: process.env.MAIL_USER_PASSWORDFOR_SEND_EMAIL, 
     },
+    /* tls: {
+        rejectUnauthorized: false
+    } */
+
+
     /* tls: {
         rejectUnauthorized: false
     } */
@@ -166,12 +178,13 @@ class AuthController{
             }
 
             let user = await User.findByEmail(email);
-            if(!user || typeof user === "undefined" || !user.id || !user.id > 0 ){
+            //if(!user || typeof user === "undefined" || !user.id || !user.id > 0 ){
+            if((!user || typeof user === "undefined" || !user.id || user.id <= 0)){
                 throw ErrorController.BadRequest(`User with email ${email} not found`)
             }
 
             const uuid = uuidv4();
-            User.updateUuidByEmail(email,0,uuid)
+            await User.updateUuidByEmail(email,0,uuid)
 
             const link = `${process.env.MAIL_CLIENT_HOST}/change-password/${uuid}`;
             const html = 
@@ -182,7 +195,7 @@ class AuthController{
             await transporter.sendMail({
                 from: process.env.MAIL_USER,
                 to: email,
-                subject: 'Recower password on ' + process.env.MAIL_CLIENT_HOST,
+                subject: 'Recover password on ' + process.env.MAIL_CLIENT_HOST,
                 text: html,
                 html: html
             })
