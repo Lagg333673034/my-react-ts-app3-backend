@@ -6,7 +6,6 @@ const cookieParser = require('cookie-parser');
 const errorMiddleware = require('./middleware/error');
 
 const CORS_ORIGIN = process.env.CORS_ORIGIN;
-const CORS_ORIGIN1 = process.env.CORS_ORIGIN1;
 const SERVER_PORT = process.env.SERVER_PORT;
 
 const app = express();
@@ -29,6 +28,7 @@ app.use(function(req, res, next) {
     //const allowedOrigins = ['http://localhost:3000','https://lagg333673034-my-test-app.netlify.app'];
     const allowedOrigins = [`${CORS_ORIGIN}`];
 
+    
     const origin = req.headers.origin;
     if (allowedOrigins.includes(origin)) {
          res.setHeader('Access-Control-Allow-Origin', origin);

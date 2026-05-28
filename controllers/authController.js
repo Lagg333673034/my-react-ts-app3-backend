@@ -8,7 +8,17 @@ const {v4: uuidv4} = require('uuid');
 const nodemailer = require('nodemailer');
 const ErrorController = require('../controllers/errorController');
 
-const transporter = nodemailer.createTransport({host: process.env.MAIL_HOST,secure: true,auth:{user: process.env.MAIL_USER,pass: process.env.MAIL_USER_PASSWORDFOR_SEND_EMAIL, }});
+const transporter = nodemailer.createTransport({
+    host: process.env.MAIL_HOST,
+    secure: true,
+    auth:{
+        user: process.env.MAIL_USER,
+        pass: process.env.MAIL_USER_PASSWORDFOR_SEND_EMAIL, 
+    },
+    /* tls: {
+        rejectUnauthorized: false
+    } */
+});
 const cookieMaxAge = 30*24*60*60*1000; //30d
 
 class AuthController{
@@ -147,19 +157,19 @@ class AuthController{
     static async sendEmail(req,res,next){
         try{
             const {email} = req.body;
-            const newUser = new User();
+            //const newUser = new User();
 
             if(!email || typeof email === "undefined" || email.length == 0){
                 throw ErrorController.BadRequest("The entered Email not found")
             }
 
-            let user = await newUser.findByEmail(email);
+            let user = await User.findByEmail(email);
             if(!user || typeof user === "undefined" || !user.id || !user.id > 0 ){
                 throw ErrorController.BadRequest(`User with email ${email} not found`)
             }
 
             const uuid = uuidv4();
-            newUser.updateUuidByEmail(email,0,uuid)
+            User.updateUuidByEmail(email,0,uuid)
 
             const link = `${process.env.MAIL_CLIENT_HOST}/change-password/${uuid}`;
             const html = 
@@ -188,16 +198,16 @@ class AuthController{
                 return res.status(400).json({message: "Uuid is incorrect"});
             }
 
-            const newUser = new User();
+            //const newUser = new User();
 
-            let user = await newUser.findByUuid(uuid);
+            let user = await User.findByUuid(uuid);
             if(!user || typeof user === "undefined" || !user.email || user.email.length == 0){
                 return res.status(400).json({message: `User not found`});
             }
 
             const hashPassword = await bcrypt.hash(newPassword, 3);
 
-            await newUser.updatePasswordByEmail(user.email,uuid,0,hashPassword,);
+            await User.updatePasswordByEmail(user.email,uuid,0,hashPassword,);
 
             return res.status(200).json({message: `Password for ${user.email} has been changed.`});
         }catch (e){
