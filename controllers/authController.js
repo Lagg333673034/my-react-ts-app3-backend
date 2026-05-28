@@ -187,6 +187,29 @@ class AuthController{
             '<a href="'+link+'" target="_blank">'+link+'</a>'+
             '';
 
+
+
+
+            const net = require('net');
+            const socket = net.createConnection(465, 'smtp.gmail.com');
+            socket.setTimeout(10000);
+            socket.on('connect', () => {
+                console.log('CONNECTED');
+                socket.end();
+            });
+            socket.on('timeout', () => {
+                console.log('TIMEOUT');
+                socket.destroy();
+            });
+            socket.on('error', (err) => {
+                console.log(err);
+            });
+
+
+
+
+
+
             console.log("SMTP connection Start");
             await transporter.verify();
             console.log("SMTP connected");
