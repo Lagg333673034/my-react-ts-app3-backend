@@ -197,7 +197,7 @@ class AuthController{
 
 
             const net = require('net');
-            const socket = net.createConnection(465, 'smtp.gmail.com');
+            const socket = net.createConnection(587, 'smtp.gmail.com');
             socket.setTimeout(10000);
             socket.on('connect', () => {
                 console.log('CONNECTED');
@@ -212,7 +212,7 @@ class AuthController{
             });
 
 
-
+            console.log(transporter.options);
 
 
 
