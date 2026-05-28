@@ -9,14 +9,14 @@ const nodemailer = require('nodemailer');
 const ErrorController = require('../controllers/errorController');
 
 const transporter = nodemailer.createTransport({
-    /* host: process.env.MAIL_HOST,
+    host: process.env.MAIL_HOST,
     port: 465,
     secure: true,
     auth:{
         user: process.env.MAIL_USER,
         pass: process.env.MAIL_USER_PASSWORDFOR_SEND_EMAIL, 
-    }, */
-    host: process.env.MAIL_HOST,
+    },
+    /* host: process.env.MAIL_HOST,
     port: 587,
     secure: false,
     auth: {
@@ -25,7 +25,7 @@ const transporter = nodemailer.createTransport({
     },
     tls: {
         rejectUnauthorized: false
-    }
+    } */
 });
 const cookieMaxAge = 30*24*60*60*1000; //30d
 
