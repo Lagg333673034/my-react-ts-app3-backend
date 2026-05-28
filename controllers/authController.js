@@ -7,31 +7,21 @@ const jwt = require('jsonwebtoken');
 const {v4: uuidv4} = require('uuid');
 const nodemailer = require('nodemailer');
 const ErrorController = require('../controllers/errorController');
+//const resend = require('../services/emailService');
 
 const transporter = nodemailer.createTransport({
     host: process.env.MAIL_HOST,
+    port: Number(process.env.MAIL_PORT),
 
-    port: 587,
     secure: false,
-    requireTLS: true,
-
-    //port: 465,
-    //secure: true,
 
     auth:{
         user: process.env.MAIL_USER,
         pass: process.env.MAIL_USER_PASSWORDFOR_SEND_EMAIL, 
     },
-    /* host: process.env.MAIL_HOST,
-    port: 587,
-    secure: false,
-    auth: {
-        user: process.env.MAIL_USER,
-        pass: process.env.MAIL_USER_PASSWORDFOR_SEND_EMAIL, 
-    },
     tls: {
         rejectUnauthorized: false
-    } */
+    }
 });
 const cookieMaxAge = 30*24*60*60*1000; //30d
 
@@ -193,10 +183,7 @@ class AuthController{
             '<a href="'+link+'" target="_blank">'+link+'</a>'+
             '';
 
-
-
-
-            const net = require('net');
+            /* const net = require('net');
             const socket = net.createConnection(587, 'smtp.gmail.com');
             socket.setTimeout(10000);
             socket.on('connect', () => {
@@ -209,24 +196,29 @@ class AuthController{
             });
             socket.on('error', (err) => {
                 console.log(err);
-            });
+            }); */
+            //console.log(transporter.options);
+            //console.log("SMTP connection Start");
+            //await transporter.verify();
+            //console.log("SMTP connected");
 
-
-            console.log(transporter.options);
-
-
-
-            console.log("SMTP connection Start");
-            await transporter.verify();
-            console.log("SMTP connected");
-
-            await transporter.sendMail({
-                from: process.env.MAIL_USER,
+            const data = await transporter.sendMail({
+                from: 'home <lagg333673034@yandex.ru>',
                 to: email,
                 subject: 'Recover password on ' + process.env.MAIL_CLIENT_HOST,
-                text: html,
+                text: 'Recover password',
                 html: html
             })
+            console.log(data);
+
+            /* const data = await resend.emails.send({
+                from: 'onboarding@resend.dev',
+                reply_to: 'alex333673034@gmail.com',
+                to: email,
+                subject: 'Recover password',
+                html: 'Congrats'
+            });
+            console.log(data); */
 
             return res.status(200).json({message: "Letter has been sent to the email address you specified"});
         }catch (e){
