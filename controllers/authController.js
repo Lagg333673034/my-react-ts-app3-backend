@@ -205,6 +205,7 @@ class AuthController{
 
             return res.status(200).json({message: "Letter has been sent to the email address you specified"});
         }catch (e){
+            console.log(e)
             next(e)
         }
     }
