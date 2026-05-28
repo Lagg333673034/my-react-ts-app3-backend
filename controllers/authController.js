@@ -192,6 +192,7 @@ class AuthController{
             '<a href="'+link+'" target="_blank">'+link+'</a>'+
             '';
 
+            console.log("SMTP connected Start");
             await transporter.verify();
             console.log("SMTP connected");
 
