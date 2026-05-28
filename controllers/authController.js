@@ -147,7 +147,8 @@ class AuthController{
             }
             
             const hashPassword = await bcrypt.hash(password,3);
-            await newUser.registratioUsingEmailAndPassword(0,email,hashPassword);
+            //await newUser.registratioUsingEmailAndPassword(0,email,hashPassword);
+            await User.registratioUsingEmailAndPassword(0,email,hashPassword);
             
             return res.status(200).json({message: "User was created"});
         }catch (e){
