@@ -192,6 +192,9 @@ class AuthController{
             '<a href="'+link+'" target="_blank">'+link+'</a>'+
             '';
 
+            await transporter.verify();
+            console.log("SMTP connected");
+
             await transporter.sendMail({
                 from: process.env.MAIL_USER,
                 to: email,
