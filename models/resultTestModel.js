@@ -8,11 +8,11 @@ class ResultTest{
         (select ttest.name from ttest where ttest.id = tresulttest.idTest) as testName, 
         (select tuser.email from tuser where tuser.id = tresulttest.idUser) as emailRegistred, 
         tresulttest.email as emailNotRegistred, 
-        DATE_FORMAT(tresulttest.timeStart, "%d.%m.%Y (%H:%i:%s)") as timeStart, 
-        DATE_FORMAT(tresulttest.timeStart, "%Y-%m-%dT%H:%i:%s.000Z") as timeStartUTC, 
+        DATE_FORMAT(tresulttest.timeStart, '%d.%m.%Y (%H:%i:%s)') as timeStart, 
+        DATE_FORMAT(tresulttest.timeStart, '%Y-%m-%dT%H:%i:%s.000Z') as timeStartUTC, 
         tresulttest.timeStart as timeStart0, 
-        DATE_FORMAT(tresulttest.timeFinish, "%d.%m.%Y (%H:%i:%s)") as timeFinish, 
-        DATE_FORMAT(tresulttest.timeFinish, "%Y-%m-%dT%H:%i:%s.000Z") as timeFinishUTC, 
+        DATE_FORMAT(tresulttest.timeFinish, '%d.%m.%Y (%H:%i:%s)') as timeFinish, 
+        DATE_FORMAT(tresulttest.timeFinish, '%Y-%m-%dT%H:%i:%s.000Z') as timeFinishUTC, 
         tresulttest.timeFinish as timeFinish0 
 
         FROM tresulttest 
@@ -100,8 +100,8 @@ group by t2.idQuestion
     async findResultTestByIdUser(idTest,idUser){
         let sql = `SELECT 
             id, idTest, 
-            DATE_FORMAT(timeStart, "%Y-%m-%dT%H:%i:%s.000Z") as timeStart,
-            DATE_FORMAT(timeFinish, "%Y-%m-%dT%H:%i:%s.000Z") as timeFinish,
+            DATE_FORMAT(timeStart, '%Y-%m-%dT%H:%i:%s.000Z') as timeStart,
+            DATE_FORMAT(timeFinish, '%Y-%m-%dT%H:%i:%s.000Z') as timeFinish,
             idUser, email 
             FROM tresulttest 
             WHERE udln is null and idTest=${idTest} and idUser='${idUser}' 
@@ -120,8 +120,8 @@ group by t2.idQuestion
             let sql = `INSERT INTO tresulttest(idUserOwner,idTest,timeStart,timeFinish,idUser) VALUES (  
             ${idUserOwner},
             ${idTest},
-            STR_TO_DATE('${timeStart}',"%Y-%m-%dT%H:%i:%s.000Z"),
-            STR_TO_DATE('${timeFinish}',"%Y-%m-%dT%H:%i:%s.000Z"),
+            STR_TO_DATE('${timeStart}','%Y-%m-%dT%H:%i:%s.000Z'),
+            STR_TO_DATE('${timeFinish}','%Y-%m-%dT%H:%i:%s.000Z'),
             ${idUser} 
             );`;
             let result_sql = await db.execute(sql);
