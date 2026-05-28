@@ -23,14 +23,9 @@ const transporter = nodemailer.createTransport({
         user: process.env.MAIL_USER,
         pass: process.env.MAIL_USER_PASSWORDFOR_SEND_EMAIL, 
     },
-    /* tls: {
+    tls: {
         rejectUnauthorized: false
-    } */
-
-
-    /* tls: {
-        rejectUnauthorized: false
-    } */
+    }
 });
 const cookieMaxAge = 30*24*60*60*1000; //30d
 
@@ -192,7 +187,7 @@ class AuthController{
             '<a href="'+link+'" target="_blank">'+link+'</a>'+
             '';
 
-            console.log("SMTP connected Start");
+            console.log("SMTP connection Start");
             await transporter.verify();
             console.log("SMTP connected");
 
@@ -206,7 +201,7 @@ class AuthController{
 
             return res.status(200).json({message: "Letter has been sent to the email address you specified"});
         }catch (e){
-            console.log(e)
+            //console.log(e)
             next(e)
         }
     }
